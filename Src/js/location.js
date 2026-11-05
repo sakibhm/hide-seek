@@ -21,7 +21,7 @@ export function getCurrentLocation() {
       error => reject(error),
       {
         enableHighAccuracy: true,
-        timeout: 15000,
+        timeout: 30000,
         maximumAge: 0
       }
     );
@@ -38,7 +38,13 @@ export function trackLocation(roomCode) {
   const locationRef = ref(db, `rooms/${roomCode}/locations/${uid}`);
 
   return navigator.geolocation.watchPosition(
-    async position => {
+    async position => { const accuracy = position.coords.accuracy;
+
+  // Reject extremely inaccurate GPS fixes
+  if (accuracy > 100) {
+    console.warn('GPS fix rejected:', accuracy, 'meters');
+    return;
+  }
       const location = {
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
@@ -59,7 +65,7 @@ export function trackLocation(roomCode) {
     {
       enableHighAccuracy: true,
       maximumAge: 3000,
-      timeout: 15000
+      timeout: 30000
     }
   );
 }

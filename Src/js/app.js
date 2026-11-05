@@ -238,6 +238,12 @@ function renderGame(room) {
   const isSeeker = player.role === 'seeker';
   const hidingDuration = room.settings.hidingTime;
   const deadline = room.hidingStartedAt + hidingDuration * 1000;
+  console.log({
+  device: navigator.userAgent,
+  hidingStartedAt: room.hidingStartedAt,
+  serverTime: getServerTime(),
+  remaining: Math.ceil((deadline - getServerTime()) / 1000)
+});
 
   gameRole.textContent = isSeeker ? '🔎 SEEKER' : '🏃 HIDER';
   gameDetails.textContent = `Zone radius: ${room.settings.zoneRadius} m`;
